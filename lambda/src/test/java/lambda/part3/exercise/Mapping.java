@@ -30,14 +30,16 @@ public class Mapping {
 
         // ([T], T -> R) -> [R]
         public <R> MapHelper<R> map(Function<T, R> f) {
-            // TODO
-            throw new UnsupportedOperationException();
+            List<R> result = new ArrayList<>(list.size());
+            list.forEach(t -> result.add(f.apply(t)));
+            return new MapHelper<R>(result);
         }
 
         // ([T], T -> [R]) -> [R]
         public <R> MapHelper<R> flatMap(Function<T, List<R>> f) {
-            // TODO
-            throw new UnsupportedOperationException();
+            List<R> result = new ArrayList<>(list.size());
+            list.forEach(t -> result.addAll(f.apply(t)));
+            return new MapHelper<R>(result);
         }
     }
 
@@ -62,11 +64,9 @@ public class Mapping {
         );
 
         List<Employee> mappedEmployees = new MapHelper<>(employees)
-                /*
-                .map(TODO) // Изменить имя всех сотрудников на John .map(e -> e.withPerson(e.getPerson().withFirstName("John")))
-                .map(TODO) // Добавить всем сотрудникам 1 год опыта .map(e -> e.withJobHistory(addOneYear(e.getJobHistory())))
-                .map(TODO) // Заменить все qa на QA
-                * */
+                .map(e -> e.withPerson(e.getPerson().withFirstName("John"))) // Изменить имя всех сотрудников на John .map(e -> e.withPerson(e.getPerson().withFirstName("John")))
+                .map(e -> e.withJobHistory((addOneYear(e.getJobHistory())))) // Добавить всем сотрудникам 1 год опыта .map(e -> e.withJobHistory(addOneYear(e.getJobHistory())))
+                .map(e -> e.withJobHistory(changeQaToQa(e.getJobHistory()))) // Заменить все qa на QA
                 .getList();
 
         List<Employee> expectedResult = Arrays.asList(
@@ -88,6 +88,14 @@ public class Mapping {
         );
 
         assertEquals(mappedEmployees, expectedResult);
+    }
+
+    private List<JobHistoryEntry> changeQaToQa(List<JobHistoryEntry> jh) {
+        return new MapHelper<>(jh).map(e -> e.getPosition().equals("qa") ? e.withPosition("QA") : e).getList();
+    }
+
+    private List<JobHistoryEntry> addOneYear(List<JobHistoryEntry> jh) {
+        return new MapHelper<>(jh).map(e -> e.withDuration(e.getDuration() + 1)).getList();
     }
 
     private static class LazyMapHelper<T, R> {
