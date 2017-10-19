@@ -2,7 +2,10 @@ package lambda.part1.exercise;
 
 import org.junit.Test;
 
+import java.util.Arrays;
 import java.util.StringJoiner;
+import java.util.stream.Collectors;
+import java.util.stream.Stream;
 
 import static org.junit.Assert.assertEquals;
 
@@ -62,10 +65,17 @@ public class Lambdas03Exercise {
         return sj.toString();
     }
 
+
+    private String streamStringSum(String s, int i) {
+        String[] array = new String[i];
+        Arrays.fill(array, s);
+        return Stream.of(array).collect(Collectors.joining("-"));
+    }
+
+
     @Test
     public void strSum2() {
-        final GenericProduct<String> prod = null; // use stringSumWithDelimeter;
-
+        final GenericProduct<String> prod = this::streamStringSum;
         assertEquals(prod.prod("a", 3), "a-a-a");
     }
 
