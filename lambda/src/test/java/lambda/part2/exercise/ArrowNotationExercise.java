@@ -26,20 +26,31 @@ public class ArrowNotationExercise {
         assertEquals(true, compareAges.test(new Person("a", "b", 22), new Person("c", "d", 22)));
     }
 
+
     // TODO
     // getFullName: Person -> String
+    public String getFullName(Person person) {
+        return person.getFirstName() + " " + person.getLastName();
+    }
 
     // TODO
     // ageOfPersonWithTheLongestFullName: (Person -> String) -> ((Person, Person) -> int)
     //
+    public BiFunction<Person, Person, Integer> getAgeOfPersonWithTheLongestFullName(Function<Person, String> function) {
+        return (person, person2) ->
+                function.apply(person).length() > function.apply(person2).length() ? person.getAge() : person2.getAge();
+    }
 
     @Test
     public void getAgeOfPersonWithTheLongestFullName() {
-        // getFullName: Person -> String
-        final Function<Person, String> getFullName = o -> o.getFirstName() + " " + o.getLastName();
-        // ageOfPersonWithTheLongestFullName: (Person -> String) -> (Person, Person) -> Integer
+        // Person -> String
+        final Function<Person, String> getFullName = this::getFullName;
+
+        // (Person, Person) -> Integer
+        // TODO use ageOfPersonWithTheLongestFullName(getFullName)
         final BiFunction<Person, Person, Integer> ageOfPersonWithTheLongestFullName =
-                (o1, o2) -> getFullName.apply(o1).length() > getFullName.apply(o2).length() ? o1.getAge() : o2.getAge();
+                (person, person2) -> getAgeOfPersonWithTheLongestFullName(getFullName).apply(person, person2);
+
         assertEquals(
                 Integer.valueOf(1),
                 ageOfPersonWithTheLongestFullName.apply(
