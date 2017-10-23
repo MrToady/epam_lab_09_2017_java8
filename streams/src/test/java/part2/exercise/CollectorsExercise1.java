@@ -61,7 +61,7 @@ public class CollectorsExercise1 {
                         employee.getJobHistory().stream()
                                 .map(JobHistoryEntry::getEmployer)
                                 .map(employer -> new Pair(employer, employee.getPerson())))
-                .collect(Collectors.toSet()).stream()
+                .distinct()
                 .collect(Collectors.toMap(Pair::getEmployer,
                         pair ->
                                 pair.getPerson().getFirstName() +
