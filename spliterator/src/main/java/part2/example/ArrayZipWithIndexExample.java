@@ -8,7 +8,6 @@ public class ArrayZipWithIndexExample {
 
     public static class IndexedArraySpliterator<T> extends Spliterators.AbstractSpliterator<IndexedPair<T>> {
 
-
         private final T[] array;
         private int startInclusive;
         private final int endExclusive;
@@ -61,9 +60,8 @@ public class ArrayZipWithIndexExample {
             }
 
             int middle = startInclusive + length/2;
-
-            final IndexedArraySpliterator<T> newSpliterator = new IndexedArraySpliterator<>(array, startInclusive, middle);
-
+            final IndexedArraySpliterator<T> newSpliterator =
+                    new IndexedArraySpliterator<>(array, startInclusive, middle);
             startInclusive = middle;
 
             return newSpliterator;
